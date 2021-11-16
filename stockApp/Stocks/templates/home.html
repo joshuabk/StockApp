@@ -1,0 +1,90 @@
+{%extends "base.html"%}
+
+{% block content%}
+
+<h1>Stock Data</h1>
+
+<br>
+
+
+<br>
+<br>
+
+<table class = "table ml-5"><tr><th>Strike</th><th>Price</th></tr>
+{%for strike, value in optionsChain.items%}
+<tr><td>{{strike}}</td><td>{{value}}</td></tr><br>
+
+{%endfor%}
+</table><br><br>
+
+<span>Volatility: {{Volatility}}</span><br>
+
+<div class="card">
+    <div class="card-body">
+
+{% if ticker%}
+    {{ticker}}
+
+{%endif%}
+
+{%if apiQuote%}
+    {%if apiQuote == "Error"%}
+         this stock ticker does not exists
+    {%else%}
+   
+    <br>
+    <br>
+    {{value}}
+    <h1>{{apiQuote.companyName}}</h1><br>
+    latest Close: {{Close}}<br>
+    latest open : {{Open}}<br>
+    day low: {{Low}}<br>
+    day High: {{apiQuote.High}}<br>
+    latest volume: {{apiQuote.Volume}}<br>
+    adjustedClose: {{apiQuote.AdjClose}}<br>
+    short ratio: {{apiQuote.shortRatio}}<br>
+    
+    day high: {{apiQuote.dayHigh}}<br>
+   
+    Market Cap: {{apiQuote.marketCap}}<br>
+    
+    52 week high: {{apiQuote.fiftyTwoWeekHigh}}<br>
+    52 week low: {{apiQuote.fiftyTwoWeekLow}}<br>
+
+    
+    <br>
+    <br>
+    <br>
+    <span>Option Value: {{optionValue}}</span>
+ 
+
+    <br>
+    <br>
+    <br>
+   
+    {%for price in apiQuote.Close.values%}
+   
+
+    {%endfor%}
+  
+    {{apiChart}}<br><br>
+    {%for history in histories%}
+    {{history}}
+    {{histories}}
+    {%endfor%}
+    
+    {{history}}
+  
+
+    {%endif%}
+    
+{%endif%}
+<br>
+
+ </div>
+</div>
+
+
+
+
+{%endblock%}
