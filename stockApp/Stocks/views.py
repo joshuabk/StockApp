@@ -7,8 +7,12 @@ import datetime
 import pandas_datareader.data as pdr
 import yfinance as yf
 from. import BlackScholesCalculation as bsc
+from alpha_vantage.timeseries import TimeSeries
+import requests
+from yahoo_fin import options
 
-
+myKey =  "8MY3LIWOHCF78K17"
+ 
 def addStock(request):
     return render(request,'addStock.html', {})
 
@@ -20,13 +24,23 @@ def home(request):
     import json
     
     
-
+    myKey =  "8MY3LIWOHCF78K17"
     if request.method == 'POST':
            
             ticker = request.POST["ticker"]
             strExpDate = request.POST["expDate"]
+
+            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ticker+'&apikey=8MY3LIWOHCF78K17'
+            req = requests.get(url)
+            stockA = req.json()
+            print(stockA['Time Series (Daily)']['2021-11-16'])
+
+            url = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=CNY&apikey=8MY3LIWOHCF78K17'
+            r = requests.get(url)
+            crypto = r.json()
+            #print(crypto)
             
-            print(datetime.date.today())
+            #print(datetime.date.today())
             expDate = datetime.datetime.strptime(strExpDate,"%Y-%m-%d").date()
             print(expDate)
            
@@ -34,13 +48,13 @@ def home(request):
             DaysToExp = timeToExpDelta.days
             print(DaysToExp)
             stock = yf.Ticker(ticker)
-            startDate = '2019-03-17'
-            endDate = '2020-03-17'
+            startDate = '2020-11-10'
+            endDate = '2021-11-17'
             stockData  = data.get_data_yahoo(ticker, startDate, endDate)
             #date_unit = "s"
             jsonDataString = stockData.to_json( date_format = 'iso', double_precision = 2)
             jsonDataDict = json.loads(jsonDataString) 
-           
+            print(jsonDataDict)
            
            
             api_quote = requests.get("https://sandbox.iexapis.com/stable/stock/"+ticker+"/quote?token=Tpk_e52c0b5efdff4d758f59a043f6001d40")
@@ -54,13 +68,14 @@ def home(request):
             priceList = list(jsonDataDict['Close'].values())
             volatility = bsc.getLogAnualizedVolitilityStd(priceList)
             #volatility = 0.3
-            High = list(jsonDataDict['High'].values())[-1]
-            Close = list(jsonDataDict['Close'].values())[-1]
-            optionsChain = bsc.calcListOptionChain(Close, 300.0, 0.0, DaysToExp, 0.03, volatility)
+            High = stockA['Time Series (Daily)']['2021-11-17']['2. high']
+            Close = float(stockA['Time Series (Daily)']['2021-11-17']['4. close'])
+            Low = stockA['Time Series (Daily)']['2021-11-17']['3. low']
+            optionsChain = bsc.calcCallOptionChain(Close, 950.0, 0.0, DaysToExp, 0.03, volatility)
 
-            High = list(jsonDataDict['High'].values())[-1]
+            Open = stockA['Time Series (Daily)']['2021-11-17']['1. open']
 
-            return render(request,'home.html', {'apiQuote':jsonDataDict, 'Open':list(jsonDataDict['Open'].values())[-1], 'Close':list(jsonDataDict['Close'].values())[-1], 'Low':list(jsonDataDict['Low'].values())[-1], 'High':High, 'Volatility':volatility, 'optionsChain' :optionsChain})
+            return render(request,'home.html', {'apiQuote':jsonDataDict, 'Open':Open, 'Close':Close, 'Low':Low, 'High':High, 'Volatility':volatility, 'optionsChain' :optionsChain})
 
 
 
