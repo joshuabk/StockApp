@@ -7,15 +7,7 @@
 <br>
 
 
-<br>
-<br>
 
-<table class = "table ml-5"><tr><th>Strike</th><th>Price</th></tr>
-{%for strike, value in optionsChain.items%}
-<tr><td>{{strike}}</td><td>{{value}}</td></tr><br>
-
-{%endfor%}
-</table><br><br>
 
 <span>Volatility: {{Volatility}}</span><br>
 
@@ -36,26 +28,31 @@
     <br>
     {{value}}
     <h1>{{apiQuote.companyName}}</h1><br>
-    latest Close: {{Close}}<br>
-    latest open : {{Open}}<br>
-    day low: {{Low}}<br>
-    day High: {{High}}<br><br>
-    latest volume: {{apiQuote.Volume}}<br>
-    adjustedClose: {{apiQuote.AdjClose}}<br>
-    short ratio: {{apiQuote.shortRatio}}<br>
-    
-    day high: {{apiQuote.dayHigh}}<br>
-   
-    Market Cap: {{apiQuote.marketCap}}<br>
-    
-    52 week high: {{apiQuote.fiftyTwoWeekHigh}}<br>
-    52 week low: {{apiQuote.fiftyTwoWeekLow}}<br>
+    <table  class  = "table">
+       <tr><td>Date : {{apiQuote.latestTime}}</td></tr>
+       <tr><td>latest Close: {{Close}}</td></tr>
+        <tr><td>latest open : {{Open}}</td></tr>
+        <tr><td>day low: {{Low}}</td></tr>
+        <tr><td>day High: {{High}}</td></tr>
+        <tr><td>Volume: {{apiQuote.volume}}</td></tr>
+        
+        <tr><td>Market Cap: {{apiQuote.marketCap}}</td></tr>
+        <tr><td>52 week high: {{apiQuote.week52High}}</td></tr>
+        <tr><td>52 week low: {{apiQuote.week52Low}}</td></tr>
+        <tr><td>peRatio: {{apiQuote.peRatio}}</td></tr>
+    </table>
+
 
     
     <br>
     <br>
-    <br>
-    <span>Option Value: {{optionValue}}</span>
+    <h3>Option Chain</h3>
+    <table class = "table ml-5"><tr><th>Strike</th><th>Price</th></tr>
+        {%for strike, value in optionsChain.items%}
+        <tr><td>{{strike}}</td><td>{{value}}</td></tr>
+        
+        {%endfor%}
+        </table><br><br>
  
 
     <br>

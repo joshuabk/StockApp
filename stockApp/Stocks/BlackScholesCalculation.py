@@ -50,7 +50,7 @@ def calcPutOptionChain(St, startPrice, t, T, r, sigma):
     optionsDict = {}
     for strike in range(int(startPrice), int(startPrice) + 400, 10): 
         optionPrice = BSM_put_value(St, strike, t, T, r, sigma)
-        optionsDict.update({str(strike):optionPrice})
+        optionsDict.update({str(strike):round(optionPrice,2)})
         
 
     return optionsDict
