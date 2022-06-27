@@ -41,16 +41,16 @@ def BSM_put_value(St,K, t, T, r, sigma):
 def calcCallOptionChain(St, startPrice, t, T, r, sigma):
     optionsDict = {}
     for strike in range(int(startPrice), int(startPrice) + 400, 10): 
-        optionPrice = BSM_call_value(St, strike, t, T, r, sigma)
-        optionsDict.update({str(strike):optionPrice})
+        optionPrice = round(BSM_call_value(St, strike, t, T, r, sigma),2)
+        optionsDict.update({format(strike,'.2f'): optionPrice})
         
     return optionsDict 
 
 def calcPutOptionChain(St, startPrice, t, T, r, sigma):
     optionsDict = {}
-    for strike in range(int(startPrice), int(startPrice) + 400, 10): 
-        optionPrice = BSM_put_value(St, strike, t, T, r, sigma)
-        optionsDict.update({str(strike):round(optionPrice,2)})
+    for strike in range(int(startPrice), int(startPrice) -400, -10): 
+        optionPrice = round(BSM_put_value(St, strike, t, T, r, sigma),2)
+        optionsDict.update({format(strike,'.2f'): optionPrice})
         
 
     return optionsDict

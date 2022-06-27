@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from pandas_datareader import data
 import pandas as pd
+import numpy as np
 import json
 from datetime import date 
 import datetime 
@@ -39,13 +40,15 @@ def home(request):
             r = requests.get(url)
             crypto = r.json()
             #print(crypto)
+
+            #polygon api Key
             
             #print(datetime.date.today())
             expDate = datetime.datetime.strptime(strExpDate,"%Y-%m-%d").date()
             #print(expDate)
            
-            timeToExpDelta =  expDate - datetime.date.today()
-            DaysToExp = timeToExpDelta.days
+            timeToExpDelta = np.busday_count(  datetime.date.today(), expDate) 
+            DaysToExp = timeToExpDelta + 2
             #print(DaysToExp)
             stock = yf.Ticker(ticker)
             startDate = '2022-6-10'
@@ -54,9 +57,9 @@ def home(request):
             #date_unit = "s"
             jsonDataString = stockData.to_json( date_format = 'iso', double_precision = 2)
             jsonDataDict = json.loads(jsonDataString) 
-            print("THIS IS THE JSON !!!!!!!!!!!!!")
+            #print("THIS IS THE JSON !!!!!!!!!!!!!")
             
-            print(jsonDataDict)
+            #print(jsonDataDict)
            
            
             api_quote = requests.get("https://sandbox.iexapis.com/stable/stock/"+ticker+"/quote?token=Tpk_e52c0b5efdff4d758f59a043f6001d40")
@@ -79,7 +82,7 @@ def home(request):
             Low = stockA['Time Series (Daily)'][date]['3. low']
             optionsChain = bsc.calcCallOptionChain(Close, round(Close/10)*10, 0.0, DaysToExp, 0.03, volatility)
 
-            #print(round(optionsChain,2)) 
+            print(optionsChain)
 
             Open = stockA['Time Series (Daily)'][date]['1. open']
            
